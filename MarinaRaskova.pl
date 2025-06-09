@@ -22,7 +22,12 @@ play(ID) :-
     show_choices(Choices),
     read_choice(UserChoice),
     ( next_scene(UserChoice, Choices, NextID) ->
-        play(NextID)
+        % --- MODIFICATION START: Check for exploration before proceeding ---
+        ( should_explore_before(ID, UserChoice, NextID, ExplorationArea, ActualNextIDAfterExploration) ->
+            explore(ExplorationArea, ActualNextIDAfterExploration) % Start exploration
+        ; play(NextID) % No exploration, proceed as before
+        )
+        % --- MODIFICATION END ---
     ;   write_utf8('Ungueltige Wahl. Bitte erneut versuchen.\n\n'),
         play(ID)
     ).
@@ -57,6 +62,76 @@ write_utf8(Text) :-
     atom(Text),
     atom_codes(Text, Codes),
     maplist(put_code, Codes).
+
+% ---- START OF NEW CODE BLOCK FOR EXPLORATION ----
+% Helper for writing terms that might be atoms (for UTF-8) or other types
+write_utf8_term(Term) :- atom(Term), !, write_utf8(Term).
+write_utf8_term(Term) :- write(Term).
+
+% --- Predicate to determine if exploration should occur ---
+% should_explore_before(PreviousSceneID, ChoiceMade, DeterminedNextID, ExplorationAreaToStart, ActualNextIDForPlayAfterExploration).
+should_explore_before(1, UserChoice, NextMainSceneID, umgebung_zuhause, NextMainSceneID) :-
+    (UserChoice == a ; UserChoice == b). % After scene 1, for choices a or b, explore 'umgebung_zuhause', then proceed to original NextMainSceneID.
+% Add more rules for other exploration points if needed.
+should_explore_before(_, _, _, _, _) :- fail. % Default: no exploration.
+
+% --- Exploration Phase Logic ---
+explore(AreaID, NextMainSceneID) :-
+    write_utf8('\nDu befindest dich in: '), write_utf8_term(AreaID), write_utf8('.\nWas moechtest du tun?\n'),
+    show_explore_options(AreaID), % This will show options, including a generic 'x' if not defined for other purpose
+    read_choice(UserChoice),
+    (   explore_action(UserChoice, AreaID, NextMainSceneID) % Tries to match UserChoice with defined explore_option
+    ;   ( UserChoice == x -> % Generic fallback for 'x' if not handled by a specific explore_option(AreaID, x, ...)
+            write_utf8('\nDu entscheidest dich, mit der Geschichte fortzufahren...\n\n'),
+            play(NextMainSceneID)
+        ;   % Invalid choice if not 'x' and not in explore_option
+            write_utf8('Ungueltige Wahl. Bitte erneut versuchen.\n\n'),
+            explore(AreaID, NextMainSceneID)
+        )
+    ).
+
+% Shows choices for exploration, ensuring ID-Label format
+show_explore_choices([]).
+show_explore_choices([ID-Label|Rest]) :-
+    write_utf8(ID), write_utf8(': '), write_utf8(Label), write_utf8('\n'),
+    show_explore_choices(Rest).
+
+% Prepares and shows exploration options for a given area
+show_explore_options(AreaID) :-
+    findall(OptID-Label, explore_option(AreaID, OptID, Label, _ActionType), DefinedOptions),
+    ( memberchk(x-_, DefinedOptions) -> % If 'x' is explicitly defined for this area (e.g. for a non-continue action)
+        OptionsToDisplay = DefinedOptions
+    ; % Otherwise, add a generic 'x - Mit der Geschichte fortfahren' option
+        append(DefinedOptions, [x-'Mit der Geschichte fortfahren'], OptionsToDisplay)
+    ),
+    show_explore_choices(OptionsToDisplay).
+
+% Defines available options in exploration areas
+% explore_option(AreaID, OptionID, Label, ActionType)
+% ActionType can be: interact(MessageAtom), move(NewAreaID)
+% If OptionID is 'x', it overrides the generic "continue story" behavior for 'x' for that area.
+explore_option(umgebung_zuhause, a, 'Schau dich um.', interact('Du siehst das kleine Haus deiner Familie und den Garten. Die Luft ist frisch.')).
+explore_option(umgebung_zuhause, b, 'Gehe zur Strasse.', move(strasse)).
+% 'x' will be added generically by show_explore_options to continue to NextMainSceneID for this area
+
+explore_option(strasse, a, 'Beobachte die Nachbarn.', interact('Die Nachbarn sind beschaeftigt, bemerken dich kaum.')).
+explore_option(strasse, b, 'Gehe zurueck zum Haus.', move(umgebung_zuhause)).
+% 'x' will be added generically here too, allowing to continue the main story.
+
+% explore_action/3: Succeeds if UserInput matches a defined explore_option for the CurrentAreaID.
+% If it succeeds, it calls handle_explore_action. If it fails, explore/2 checks for generic 'x'.
+explore_action(UserInput, CurrentAreaID, NextMainSceneID_after_exploration_ends) :-
+    explore_option(CurrentAreaID, UserInput, _Label, ActionType), % Fails if UserInput is not a defined option key
+    handle_explore_action(ActionType, CurrentAreaID, NextMainSceneID_after_exploration_ends).
+
+% handle_explore_action/3: Handles the specific action type.
+handle_explore_action(interact(Message), CurrentAreaID, NextMainSceneID) :-
+    write_utf8('\n'), write_utf8(Message), write_utf8('\n\n'),
+    explore(CurrentAreaID, NextMainSceneID). % Loop back in current exploration area
+
+handle_explore_action(move(NewAreaID), _CurrentAreaID, NextMainSceneID) :-
+    explore(NewAreaID, NextMainSceneID). % Move to new exploration area
+% ---- END OF NEW CODE BLOCK FOR EXPLORATION ----
 
 % ---------------------------------------------
 % Szenen (ID, Text, [ChoiceID-Label-NextID])
