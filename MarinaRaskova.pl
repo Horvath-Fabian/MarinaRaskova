@@ -5,7 +5,7 @@
 % Startpunkt
 start :-
     intro,
-    play(1).
+    play(0).
 
 % Einfuehrungstext
 intro :-
@@ -61,6 +61,11 @@ write_utf8(Text) :-
 % ---------------------------------------------
 % Szenen (ID, Text, [ChoiceID-Label-NextID])
 % ---------------------------------------------
+
+scene(0, 'Das Flugzeug wird wie ein Gummiball in der Luft herum geworfen.Der Wind heult und die Wolken kreischen.\nSeit dem Start wurde man dauer beschallt von den Triebwerken, doch plötzlich hört man sie gar nicht mehr.Marina blickt aus dem kleinen Fenster auf den Antrieb er steht still. Sie schließt die Augen.', 
+[
+    a-'weiter'-1,
+]).
 
 scene(1,
 'Marina ist zu Hause. Es ist kein grosses Haus, aber die Nachbarn sind sehr nett.\nIhr Vater ist Opernsaenger und ihre Mutter Lehrerin.\nMarina ist 7, allein zu Hause. Ploetzlich klopft es.\nDurch den Tuerpion sieht sie ihre Mutter - traurig.\nAls sie oeffnet, bricht die Mutter in Traenen aus: Der Vater ist bei einem Motorradunfall gestorben.\nVon nun an ist Geld knapp und Marina muss sich entscheiden:\n\n',
