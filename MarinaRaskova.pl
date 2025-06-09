@@ -49,8 +49,8 @@ scene(2,
 scene(3,
 'Sie absolviert ihr Studium mit Bravur und kann ihre Mutter stolz unterstützen. Nach dem Studium fängt sie an in einer Farbfabrik zu arbeiten und lernt dort ihren Mann kennen. Gemeinsam haben sie im Jahr 1930 ihre Tochter Tanya. Dies ist jedoch nicht das Ende ihrer Karriere. Im Gegenteil sie hat gerade erst angefangen, weiter geht es in der Fliegerei als Luftfahrtzeichnerin. Ihre viele Arbeit verlangt sehr viel von ihrer Ehe, so viel dass sie sich entscheiden muss er oder die Fliegerei',
 [
-    a-'Ihre Ehe'-6,
-    b-'Ihre Karriere'-7
+    a-'Ihre Ehe'-7,
+    b-'Ihre Karriere'-6
 ]).
 
 scene(4,
@@ -62,29 +62,29 @@ scene(4,
 ]).
 
 scene(5,
-'Die Oper macht sie reich. Ihr Vater wäre mehr als nur stolz auf sie. In der Musikbranche traff sie auch ihren Mann. Alles ist so wie sie es immer wollte! Doch was jetzt? Was machen, wenn man alles machen kann? Sie fängt ihre Fliegerausbildung an. Ihr Mann unterstützt sie nicht. Er ist der Meinung sie soll einfach zurück in die Musik kommen und diesen Blödsinn lassen. Will sie für immer Musik machen oder doch ihren neuen Traum weiterverfolgen, dass würde bedeuten sich scheiden zu lassen?',
+'Die Oper macht sie reich. Ihr Vater wäre mehr als nur stolz auf sie. In der Musikbranche traff sie auch ihren Mann. Im Jahr 1930 kommt ihre Tochter zu Welt. Alles ist so wie sie es immer wollte! Doch was jetzt? Was machen, wenn man alles machen kann? Sie fängt ihre Fliegerausbildung an. Ihr Mann unterstützt sie nicht. Er ist der Meinung sie soll einfach zurück in die Musik kommen und diesen Blödsinn lassen. Will sie für immer Musik machen oder doch ihren neuen Traum weiterverfolgen, dass würde bedeuten sich scheiden zu lassen?',
 [
     a-'Zurück zur Oper'-7,
     b-'Ihren neuen Traum verfolgen'-6
 ]).
 
 scene(6,
-'Prepares for record flight. Technical problems. Fly anyway?',
+'Nach ihrer Ausbildung bekommt sie die Möglichkeit an einem Langstreckenflug Rekord teilzuhaben. Er soll den bisherigen Weltrekord des längsten Fluges mit rein weiblicher Besatzung brechen und somit in die Geschichte eingehen. Am Vorabend wird alles nocheinmal durchgecheckt. Es gibt zwar ein zwei ungereimtheiten, allerdings nichts grobes sollten man den Start und die Pressekonferenz verschieben oder sollte sie wie geplant fortfahren?',
 [
-    a-'Wait'-11,
-    b-'Fly'-12
+    a-'Verschieben'-11,
+    b-'Wie geplant weiter machen'-12
 ]).
 
 scene(7,
-'Stays married, suffers abuse. Must flee. Choose vehicle:',
+'Mit der Zeit bemerkt sie was für einen gigantischen Fehler sie begangen hat mit ihrer Hochzeit. Sie wird von ihrem Mann nicht nur beschimpft, bespuckt und geschlagen. Jeder Tag den sie überlebt ist sie dankbar. Doch sie sehnt sich eine besser Zukunft für ihre Tochter. Keine Sekunde will sie mehr bei ihrem Mann ausharren müssen und um ihr Leben fürchten. Eine Freudin hilft ihr die Flucht zu planen. Es soll nach Amerika gehen. Dort würden sie keiner Gefahr mehr ausgesetzt sein. Wie sollen sie aus der UDSSR kommen?',
 [
-    a-'Ship'-8,
-    b-'Plane'-9,
-    c-'Car'-10
+    a-'Schiff (Amerika)'-8,
+    b-'Flugzeug (Amerika)'-9,
+    c-'Auto (Siberien)'-10
 ]).
 
 scene(8,
-'Captured by Japanese after fleeing by ship. Returns post-war, traumatised.',
+'Sie flieht mit dem Schiff über den Pazifik. Es ist eine lange und zermürbende Reise, doch die Freiheit erwartet sie und ihr Kind. Es ist dunkel. Marina kann nicht schlafen und steht daher an der Railing. Sie hat keine Uhr aber es muss circa 2 Uhr in der Früh sein. Die See ist ruhig und am Horizont leuchtet ein Licht auf. Es scheint so friedlich, doch der Schein trügt. Es ist ein Japanisches Schiff sie kontrollieren alle Personen anboard. Für Marina wurde ein Haftbefehlt ausgestehlt. Sie hätte ihre eigene Tochter entführt. Gemeinsam mit ihrer Tochter wird sie nun mit dem Flugzeug nach Hause geschickt.',
 [
     a-'End'-end
 ]).
