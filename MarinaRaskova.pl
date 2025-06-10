@@ -21,13 +21,12 @@ play(ID) :-
     write_utf8(Text),
     show_choices(Choices),
     read_choice(UserChoice),
-    ( next_scene(UserChoice, Choices, NextID) ->
-        % --- MODIFICATION START: Check for exploration before proceeding ---
-        ( should_explore_before(ID, UserChoice, NextID, ExplorationArea, ActualNextIDAfterExploration) ->
-            explore(ExplorationArea, ActualNextIDAfterExploration) % Start exploration
-        ; play(NextID) % No exploration, proceed as before
+    (   next_scene(UserChoice, Choices, DeterminedNextID) ->
+        (   should_explore_before(ID, UserChoice, DeterminedNextID, ExploreArea, ActualNextIDAfterExplore) ->
+            explore(ExploreArea, ActualNextIDAfterExplore), % Start exploration
+            play(ActualNextIDAfterExplore)                  % Continue main story after exploration
+        ;   play(DeterminedNextID)                          % No exploration, proceed as normal
         )
-        % --- MODIFICATION END ---
     ;   write_utf8('Ungueltige Wahl. Bitte erneut versuchen.\n\n'),
         play(ID)
     ).
@@ -70,6 +69,10 @@ write_utf8_term(Term) :- write(Term).
 
 % --- Predicate to determine if exploration should occur ---
 % should_explore_before(PreviousSceneID, ChoiceMade, DeterminedNextID, ExplorationAreaToStart, ActualNextIDForPlayAfterExploration).
+
+% Explore airplane after intro scene (scene 0, choice 'a') before proceeding to scene 1
+should_explore_before(0, a, 1, im_flugzeug, 1).
+
 should_explore_before(1, UserChoice, NextMainSceneID, umgebung_zuhause, NextMainSceneID) :-
     (UserChoice == a ; UserChoice == b). % After scene 1, for choices a or b, explore 'umgebung_zuhause', then proceed to original NextMainSceneID.
 % Add more rules for other exploration points if needed.
@@ -117,6 +120,11 @@ explore_option(umgebung_zuhause, b, 'Gehe zur Strasse.', move(strasse)).
 explore_option(strasse, a, 'Beobachte die Nachbarn.', interact('Die Nachbarn sind beschaeftigt, bemerken dich kaum.')).
 explore_option(strasse, b, 'Gehe zurueck zum Haus.', move(umgebung_zuhause)).
 % 'x' will be added generically here too, allowing to continue the main story.
+
+% Exploration options for inside the airplane
+explore_option(im_flugzeug, a, 'Schau dich im Passagierraum um.', interact('Du siehst Reihen von Sitzen. Die Stimmung ist angespannt wegen der Turbulenzen und des Motorausfalls.')).
+explore_option(im_flugzeug, b, 'Versuche, ins Cockpit zu schauen.', interact('Die Cockpittuer ist geschlossen. Du hoerst die Piloten ueber Funk sprechen.')).
+explore_option(im_flugzeug, c, 'Blicke aus dem Fenster auf den defekten Antrieb.', interact('Der Propeller des rechten Motors steht still. Rauchspuren sind zu sehen.')).
 
 % explore_action/3: Succeeds if UserInput matches a defined explore_option for the CurrentAreaID.
 % If it succeeds, it calls handle_explore_action. If it fails, explore/2 checks for generic 'x'.
